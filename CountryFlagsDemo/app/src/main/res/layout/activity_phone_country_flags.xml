@@ -1,0 +1,7 @@
+<com.urbancups.countryflags.phoneCountryFlagsComponent xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mainContainer"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    tools:context=".sample.FlagsActivity"
+    tools:ignore="MergeRootFrame" />

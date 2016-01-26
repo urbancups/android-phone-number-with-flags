@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-package com.urbancups.countryflags;
+package com.urbancups.countryflags.sample;
 
-import android.app.Application;
-import android.test.ApplicationTestCase;
+import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 
-/**
- * <a href="http://d.android.com/tools/testing/testing_android.html">Testing Fundamentals</a>
- */
-public class ApplicationTest extends ApplicationTestCase<Application> {
-    public ApplicationTest() {
-        super(Application.class);
+public class FlagsActivity extends FragmentActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_phone_country_flags);
     }
 }

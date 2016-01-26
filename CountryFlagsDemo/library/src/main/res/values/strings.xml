@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">CountryFlags</string>
+    <string name="action_settings">Settings</string>
+    <string name="phoneNumberHint">(111) 111–1111</string>
+    <string name="countryCode">+%s</string>
+    <string name="action_send">Send</string>
+    <string name="contentDescription_flag">Flag</string>
+</resources>
