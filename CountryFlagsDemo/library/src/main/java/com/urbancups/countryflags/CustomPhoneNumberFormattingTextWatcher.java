@@ -20,12 +20,13 @@ import android.telephony.PhoneNumberUtils;
 import android.text.Editable;
 import android.text.Selection;
 import android.text.TextWatcher;
-import android.util.Log;
 
 import com.google.i18n.phonenumbers.AsYouTypeFormatter;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 
 import java.util.Locale;
+
+import timber.log.Timber;
 
 public class CustomPhoneNumberFormattingTextWatcher implements TextWatcher {
 
@@ -72,6 +73,7 @@ public class CustomPhoneNumberFormattingTextWatcher implements TextWatcher {
         }
         // If the user manually deleted any non-dialable characters, stop formatting
         if (count > 0 && hasSeparator(s, start, count)) {
+            Timber.d("beforeTextChanged: stop formatting because nondiallable characters, s was %s", s.toString());
             stopFormatting();
         }
     }
@@ -104,11 +106,8 @@ public class CustomPhoneNumberFormattingTextWatcher implements TextWatcher {
             int rememberedPos = asYouTypeFormatter.getRememberedPosition();
             mSelfChange = true;
 
-            //Log.d("afterTextChanged","s was " +s);
-            //Log.d("afterTextChanged", "formatted was " + formatted);
             //s.replace(0, formatted.length(), formatted);
             //s.replace(0, s.length(), formatted, 0, formatted.length());
-            //Log.d("afterTextChanged", "after replace s was " + s);
             /*if (s.charAt(0) != '+') {
                 s.insert(0, "+");
             }*/
@@ -136,7 +135,7 @@ public class CustomPhoneNumberFormattingTextWatcher implements TextWatcher {
      */
     private String reformat(CharSequence s, int cursor) {
 
-        Log.d("CustomPhoneNumberFormattingTextWatcher", "reformat with " +s +" and position " +String.valueOf(cursor));
+        Timber.d("reformat with %s and position %s", s, String.valueOf(cursor));
 
         // The index of char to the leftward of the cursor.
         int curIndex = cursor - 1;
@@ -144,6 +143,7 @@ public class CustomPhoneNumberFormattingTextWatcher implements TextWatcher {
         asYouTypeFormatter.clear();
         char lastNonSeparator = 0;
         boolean hasCursor = false;
+
         int len = s.length();
         for (int i = 0; i < len; i++) {
             char c = s.charAt(i);
@@ -166,7 +166,7 @@ public class CustomPhoneNumberFormattingTextWatcher implements TextWatcher {
             return "";
         }
 
-        Log.d("CustomPhoneNumberFormattingTextWatcher", "reformat returning " +formatted);
+        Timber.d("reformat returning %s", formatted);
         return formatted;
     }
 
@@ -177,7 +177,7 @@ public class CustomPhoneNumberFormattingTextWatcher implements TextWatcher {
 
     private void stopFormatting() {
 
-        Log.d("CustomPhoneNumberFormattingTextWatcher", "stopFormatting");
+        Timber.d("stopFormatting");
 
         mStopFormatting = true;
         asYouTypeFormatter.clear();

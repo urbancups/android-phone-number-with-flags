@@ -22,15 +22,12 @@ import android.text.InputFilter;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.SparseArray;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,7 +41,9 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.TreeSet;
 
-public class phoneCountryFlagsComponent extends LinearLayout {
+import timber.log.Timber;
+
+public class PhoneCountryFlagsComponent extends LinearLayout {
 
     private static final TreeSet<String> CANADA_CODES = new TreeSet<>();
     private Context mContext;
@@ -95,7 +94,7 @@ public class phoneCountryFlagsComponent extends LinearLayout {
 
     final private SparseArray<ArrayList<Country>> mCountriesMap = new SparseArray<>();
     final private PhoneNumberUtil mPhoneNumberUtil = PhoneNumberUtil.getInstance();
-    private Spinner mSpinner;
+    private CustomSpinner mSpinner;
     private EditText mPhoneEdit;
     private CountryAdapter mAdapter;
     private TextView mCountryCode;
@@ -106,12 +105,17 @@ public class phoneCountryFlagsComponent extends LinearLayout {
     final private AdapterView.OnItemSelectedListener mOnItemSelectedListener = new AdapterView.OnItemSelectedListener() {
         @Override
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+            Timber.d("onItemSelected");
+
             Country c = (Country) mSpinner.getItemAtPosition(position);
-            mCountryCode.setText(mContext.getString(com.urbancups.countryflags.R.string.countryCode, String.valueOf(c.getCountryCode())));
+            mCountryCode.setText(mContext.getString(R.string.countryCode, String.valueOf(c.getCountryCode())));
+
         }
 
         @Override
         public void onNothingSelected(AdapterView<?> parent) {
+            Timber.d("onNothingSelected");
         }
     };
 
@@ -119,14 +123,8 @@ public class phoneCountryFlagsComponent extends LinearLayout {
         @Override
         public void onPhoneChanged(String phone) {
 
-            Log.d("OnPhoneChangedListener", "onPhoneChanged with " + phone);
-            mPhoneEdit.removeTextChangedListener(mCustomPhoneNumberFormattingTextWatcher);
-            mPhoneEdit.setFilters(new InputFilter[]{});
-            mPhoneEdit.getText().clear();
-            mPhoneEdit.getText().append(phone);
-            mPhoneEdit.setSelection(mPhoneEdit.getText().length());
-            mPhoneEdit.setFilters(new InputFilter[]{mInputFilter});
-            mPhoneEdit.addTextChangedListener(mCustomPhoneNumberFormattingTextWatcher);
+            Timber.d("onPhoneChanged with " + phone);
+            modifyEditText(phone);
 
             try {
                 Phonenumber.PhoneNumber p = mPhoneNumberUtil.parse(phone, null);
@@ -172,24 +170,35 @@ public class phoneCountryFlagsComponent extends LinearLayout {
         }
     };
 
-    public phoneCountryFlagsComponent(Context context) {
+    public PhoneCountryFlagsComponent(Context context) {
         super(context);
+
+        Timber.d("first constructor");
+
         initViewGroup(context);
     }
 
-    public phoneCountryFlagsComponent(Context context, AttributeSet attrs) {
+    public PhoneCountryFlagsComponent(Context context, AttributeSet attrs) {
         super(context, attrs);
+
+        Timber.d("second constructor");
+
         initViewGroup(context);
     }
 
-    public phoneCountryFlagsComponent(Context context, AttributeSet attrs, int defStyleAttr) {
+    public PhoneCountryFlagsComponent(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+
+        Timber.d("third constructor");
+
         initViewGroup(context);
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+
+        Timber.d("onMeasure with getchildcount " +String.valueOf(getChildCount()));
 
         for(int i = 0 ; i < getChildCount() ; i++){
             getChildAt(i).measure(widthMeasureSpec, heightMeasureSpec);
@@ -199,6 +208,8 @@ public class phoneCountryFlagsComponent extends LinearLayout {
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
 
+        Timber.d("onLayout with getchildcount " + String.valueOf(getChildCount()));
+
         for(int i = 0 ; i < getChildCount() ; i++){
             getChildAt(i).layout(l, t, r, b);
         }
@@ -206,6 +217,9 @@ public class phoneCountryFlagsComponent extends LinearLayout {
     }
 
     private void initViewGroup(Context context) {
+
+        Timber.d("initViewGroup");
+
         mContext = context;
 
         View.inflate(context, R.layout.phone_country_flags_component,this);
@@ -218,14 +232,17 @@ public class phoneCountryFlagsComponent extends LinearLayout {
 
     private void initUI() {
 
-        LinearLayout spinnerContainer = (LinearLayout) mRootView.findViewById(com.urbancups.countryflags.R.id.flagsFragment_flagsSpinnerContainer);
+        Timber.d("initUI");
+
+        LinearLayout spinnerContainer = (LinearLayout) mRootView.findViewById(R.id.flagsFragment_flagsSpinnerContainer);
         mCustomPhoneNumberFormattingTextWatcher = new CustomPhoneNumberFormattingTextWatcher(mOnPhoneChangedListener);
-        mSpinner = (Spinner) mRootView.findViewById(com.urbancups.countryflags.R.id.flagsFragment_flagsSpinner);
-        mSpinner.setOnItemSelectedListener(mOnItemSelectedListener);
+        mSpinner = (CustomSpinner) mRootView.findViewById(R.id.flagsFragment_flagsSpinner);
+        mSpinner.setOnItemSelectedEvenIfUnchangedListener(this.mOnItemSelectedListener);
 
         mAdapter = new CountryAdapter(mContext);
 
-        mSpinner.setAdapter(mAdapter);
+        mSpinner.requestFocus();
+
         spinnerContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -233,8 +250,8 @@ public class phoneCountryFlagsComponent extends LinearLayout {
             }
         });
 
-        mCountryCode = (TextView) mRootView.findViewById(com.urbancups.countryflags.R.id.flagsFragment_countryCode);
-        mPhoneEdit = (EditText) mRootView.findViewById(com.urbancups.countryflags.R.id.phone);
+        mCountryCode = (TextView) mRootView.findViewById(R.id.flagsFragment_countryCode);
+        mPhoneEdit = (EditText) mRootView.findViewById(R.id.phone);
 
         mPhoneEdit.addTextChangedListener(mCustomPhoneNumberFormattingTextWatcher);
 
@@ -262,8 +279,8 @@ public class phoneCountryFlagsComponent extends LinearLayout {
         mPhoneEdit.setFilters(new InputFilter[]{mInputFilter});
 
         mPhoneEdit.setImeOptions(EditorInfo.IME_ACTION_SEND);
-        mPhoneEdit.setImeActionLabel(mContext.getString(com.urbancups.countryflags.R.string.action_send), EditorInfo.IME_ACTION_SEND);
-        mPhoneEdit.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        mPhoneEdit.setImeActionLabel(mContext.getString(R.string.action_send), EditorInfo.IME_ACTION_SEND);
+        /*mPhoneEdit.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (mPhoneEdit != null && mPhoneEdit.getText().length() > 0) {
@@ -271,11 +288,14 @@ public class phoneCountryFlagsComponent extends LinearLayout {
                 }
                 return actionId == EditorInfo.IME_ACTION_SEND;
             }
-        });
+        });*/
 
     }
 
     private void initCodes() {
+
+        Timber.d("initCodes");
+
         new AsyncPhoneInitTask().execute();
     }
 
@@ -288,8 +308,12 @@ public class phoneCountryFlagsComponent extends LinearLayout {
 
         @Override
         protected ArrayList<Country> doInBackground(Void... params) {
+
+            Timber.d("doInBackground");
+
             final ArrayList<Country> data = new ArrayList<>(233);
             BufferedReader reader = null;
+
             try {
                 reader = new BufferedReader(new InputStreamReader(mContext.getApplicationContext().getAssets().open("countries.dat"), "UTF-8"));
 
@@ -309,13 +333,13 @@ public class phoneCountryFlagsComponent extends LinearLayout {
                     i++;
                 }
             } catch (IOException e) {
-                //log the exception
+                e.printStackTrace();
             } finally {
                 if (reader != null) {
                     try {
                         reader.close();
                     } catch (IOException e) {
-                        //log the exception
+                        e.printStackTrace();
                     }
                 }
             }
@@ -336,10 +360,20 @@ public class phoneCountryFlagsComponent extends LinearLayout {
 
         @Override
         protected void onPostExecute(ArrayList<Country> data) {
+
+            Timber.d("onPostExecute size of data was " +String.valueOf(data.size()));
+
             mAdapter.addAll(data);
+            mAdapter.notifyDataSetChanged();
+
+            mSpinner.setAdapter(mAdapter);
+
+            Timber.d("onPostExecute mspinnerposition was " +String.valueOf(mSpinnerPosition));
+
             if (mSpinnerPosition > 0) {
                 mSpinner.setSelection(mSpinnerPosition);
             }
+
         }
     }
 
@@ -354,7 +388,7 @@ public class phoneCountryFlagsComponent extends LinearLayout {
      */
     @SuppressWarnings("unused") public String updateNationalNumber(String numberToFormat){
 
-        Log.d("BaseFlagFragment", "updateNationalNumber with " + numberToFormat);
+        Timber.d("updateNationalNumber with " + numberToFormat);
 
         /*//Instantiate the as you type formatter with the current region (US or UK)
         AsYouTypeFormatter aytf = mPhoneNumberUtil.getAsYouTypeFormatter(PhoneUtils.getCountryRegionFromPhone(mContext));
@@ -369,27 +403,44 @@ public class phoneCountryFlagsComponent extends LinearLayout {
 
         Phonenumber.PhoneNumber fNationalNumber = new Phonenumber.PhoneNumber();
 
-        //Try to update the phone number with the formatted number
-        try {
-            if (!TextUtils.isEmpty(numberToFormat)) {
-                 fNationalNumber = mPhoneNumberUtil.parse(numberToFormat, PhoneUtils.getCountryRegionFromPhone(mContext));
-            }
-            //Rejects if the number isn't in an acceptable format for the region code given etc.
-        } catch (NumberParseException e) {
-            Log.d("BaseFlagFragment","updateNationalNumber showing toast");
-            Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_SHORT).show();
-            return "";
-        }
-
         fNationalNumber.setCountryCodeSource(Phonenumber.PhoneNumber.CountryCodeSource.FROM_NUMBER_WITH_PLUS_SIGN);
         fNationalNumber.setCountryCode(mPhoneNumberUtil.getCountryCodeForRegion(PhoneUtils.getCountryRegionFromPhone(mContext)));
 
         String numberToReturn = mPhoneNumberUtil.format(fNationalNumber, PhoneNumberUtil.PhoneNumberFormat.E164);
 
-        Log.d("BaseFlagFragment", "Returning formatted number " + numberToReturn);
+        Timber.d("Returning formatted number " + numberToReturn);
 
         //Return the formatted phone number
         return numberToReturn;
+
     }
 
+    public EditText getPhoneEdit() {
+        return mPhoneEdit;
+    }
+
+    private void modifyEditText(String newText) {
+        mPhoneEdit.removeTextChangedListener(mCustomPhoneNumberFormattingTextWatcher);
+        mPhoneEdit.setFilters(new InputFilter[]{});
+        mPhoneEdit.getText().clear();
+        mPhoneEdit.getText().append(newText);
+        mPhoneEdit.setSelection(mPhoneEdit.getText().length());
+        mPhoneEdit.setFilters(new InputFilter[]{mInputFilter});
+        mPhoneEdit.addTextChangedListener(mCustomPhoneNumberFormattingTextWatcher);
+    }
+
+    public boolean validateNumber() {
+
+        try {
+            if (!TextUtils.isEmpty(mPhoneEdit.getText().toString())) {
+                mPhoneNumberUtil.parse(mPhoneEdit.getText().toString(), PhoneUtils.getCountryRegionFromPhone(mContext));
+            }
+            //Rejects if the number isn't in an acceptable format for the region code given etc.
+        } catch (NumberParseException e) {
+            Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        return true;
+    }
 }

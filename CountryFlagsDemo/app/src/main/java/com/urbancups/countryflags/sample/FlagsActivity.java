@@ -16,10 +16,10 @@
 
 package com.urbancups.countryflags.sample;
 
+import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 
-public class FlagsActivity extends FragmentActivity {
+public class FlagsActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,3 +27,4 @@ public class FlagsActivity extends FragmentActivity {
         setContentView(R.layout.activity_phone_country_flags);
     }
 }
+

@@ -19,6 +19,6 @@ android {
 }
 
 dependencies {
-    compile 'com.googlecode.libphonenumber:libphonenumber:7.2.3'
-    compile 'com.android.support:support-v4:23.1.1'
+    compile 'com.googlecode.libphonenumber:libphonenumber:7.2.1'
+    compile 'com.jakewharton.timber:timber:4.0.1'
 }

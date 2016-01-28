@@ -1,7 +1,5 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".sample.FlagsActivity$PlaceholderFragment"
     android:id="@+id/flagsFragment_rootView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -19,25 +17,25 @@
         android:layout_gravity="center_vertical"
         >
 
-    <com.urbancups.countryflags.CustomSpinnerSelection
-        android:id="@+id/flagsFragment_flagsSpinner"
-        android:layout_width="21dp"
-        android:layout_height="15dp"
-        android:background="@android:color/transparent"
-        android:layout_gravity="center_vertical"
-        android:gravity="bottom"
-        android:dropDownVerticalOffset="10dp"
-        android:dropDownWidth="200dp"/>
+        <com.urbancups.countryflags.CustomSpinner
+            android:id="@+id/flagsFragment_flagsSpinner"
+            android:layout_width="21dp"
+            android:layout_height="15dp"
+            android:background="@android:color/transparent"
+            android:layout_gravity="center_vertical"
+            android:gravity="bottom"
+            android:dropDownVerticalOffset="10dp"
+            android:dropDownWidth="200dp"/>
 
-    <com.urbancups.countryflags.LatoLightBoldTextView
-        android:id="@+id/flagsFragment_countryCode"
-        android:textColor="@android:color/black"
-        android:textSize="16sp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginStart="5dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        />
+        <com.urbancups.countryflags.LatoLightBoldTextView
+            android:id="@+id/flagsFragment_countryCode"
+            android:textColor="@android:color/black"
+            android:textSize="16sp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginStart="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            />
     </LinearLayout>
 
     <com.urbancups.countryflags.LatoLightBoldEditText

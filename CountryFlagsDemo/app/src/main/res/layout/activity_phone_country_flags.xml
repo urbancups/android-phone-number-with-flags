@@ -1,4 +1,4 @@
-<com.urbancups.countryflags.phoneCountryFlagsComponent xmlns:android="http://schemas.android.com/apk/res/android"
+<com.urbancups.countryflags.PhoneCountryFlagsComponent xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mainContainer"
     android:layout_width="wrap_content"

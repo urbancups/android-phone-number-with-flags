@@ -4,33 +4,29 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.Spinner;
 
-/**
- * Created by jonathanmoskovich on 24/01/2016.
- */
-public class CustomSpinnerSelection extends Spinner {
+public class CustomSpinner extends Spinner {
 
     private boolean mToggleFlag = true;
+    private OnItemSelectedListener listener;
 
-    public CustomSpinnerSelection(Context context, AttributeSet attrs,
-                                  int defStyle, int mode) {
-        super(context, attrs, defStyle, mode);
-    }
-
-    public CustomSpinnerSelection(Context context, AttributeSet attrs,
-                                  int defStyle) {
+    public CustomSpinner(Context context, AttributeSet attrs,
+                         int defStyle) {
         super(context, attrs, defStyle);
     }
 
-    public CustomSpinnerSelection(Context context, AttributeSet attrs) {
+    public CustomSpinner(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public CustomSpinnerSelection(Context context, int mode) {
-        super(context, mode);
+    public CustomSpinner(Context context) {
+        super(context);
     }
 
-    public CustomSpinnerSelection(Context context) {
-        super(context);
+    @Override
+    public void setSelection(int position) {
+        super.setSelection(position);
+        if (listener != null)
+            listener.onItemSelected(null, null, position, 0);
     }
 
     @Override
@@ -54,6 +50,11 @@ public class CustomSpinnerSelection extends Spinner {
         boolean result = super.performClick();
         mToggleFlag = true;
         return result;
+    }
+
+    public void setOnItemSelectedEvenIfUnchangedListener(
+            OnItemSelectedListener listener) {
+        this.listener = listener;
     }
 
 }

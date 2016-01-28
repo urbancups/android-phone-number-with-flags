@@ -23,16 +23,24 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import timber.log.Timber;
+
 public class CountryAdapter extends ArrayAdapter<Country> {
 
     private LayoutInflater mLayoutInflater;
 
     public CountryAdapter(Context context) {
         super(context, 0);
+
+        Timber.d("CountryAdapter constructor");
+
         mLayoutInflater = LayoutInflater.from(context);
     }
 
     public View getDropDownView(int position, View convertView, ViewGroup parent) {
+
+        Timber.d("CountryAdapter getDropDownView");
+
         final ViewHolder holder;
         if (convertView == null) {
             convertView = mLayoutInflater.inflate(R.layout.item_country_drop, parent, false);
@@ -53,10 +61,20 @@ public class CountryAdapter extends ArrayAdapter<Country> {
         return convertView;
     }
 
+    @Override
+    public void notifyDataSetChanged() {
+        super.notifyDataSetChanged();
+
+        Timber.d("CountryAdapter notifyDataSetChanged");
+    }
+
     public View getView(int position, View convertView, ViewGroup parent) {
+
+        Timber.d("CountryAdapter getView");
+
         Country country = getItem(position);
         if (convertView == null) {
-            convertView = mLayoutInflater.inflate(R.layout.item_country, null);
+            convertView = mLayoutInflater.inflate(R.layout.item_country, parent, false);
         }
         ImageView imageView = (ImageView) convertView.findViewById(R.id.image);
         imageView.setImageResource(country.getResId());
@@ -64,6 +82,7 @@ public class CountryAdapter extends ArrayAdapter<Country> {
     }
 
     private static class ViewHolder {
+
         public ImageView mImageView;
         public TextView mNameView;
         public TextView mCodeView;
