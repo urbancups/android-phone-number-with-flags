@@ -1,19 +1,17 @@
 package com.urbancups.countryflags;
 
 import android.content.Context;
-import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.widget.EditText;
 
 /**
  * Created by jonathanmoskovich on 1/26/15.
  */
-public class LatoLightBoldEditText extends EditText {
+public class LatoRegularEditText extends EditText {
 
-    private Typeface typeface;
     private final Context context;
 
-    public LatoLightBoldEditText(Context context) {
+    public LatoRegularEditText(Context context) {
         super(context);
 
         this.context = context;
@@ -21,7 +19,7 @@ public class LatoLightBoldEditText extends EditText {
         init();
     }
 
-    public LatoLightBoldEditText(Context context, AttributeSet attrs) {
+    public LatoRegularEditText(Context context, AttributeSet attrs) {
         super(context, attrs);
 
         this.context = context;
@@ -31,8 +29,10 @@ public class LatoLightBoldEditText extends EditText {
 
     private void init() {
         if (this.isInEditMode()) return;
-        typeface = Typeface.createFromAsset(context.getAssets(), "LatoLight.ttf");
-        setTypeface(typeface, Typeface.BOLD);
+        this.setTypeface(FontCache.get("LatoRegular.ttf", context));
     }
 
+    public void setTextBold() {
+        this.setTypeface(FontCache.get("LatoRegular.ttf", context));
+    }
 }

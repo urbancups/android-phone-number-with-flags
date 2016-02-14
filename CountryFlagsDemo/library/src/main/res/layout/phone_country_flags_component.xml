@@ -27,7 +27,7 @@
             android:dropDownVerticalOffset="10dp"
             android:dropDownWidth="200dp"/>
 
-        <com.urbancups.countryflags.LatoLightBoldTextView
+        <com.urbancups.countryflags.LatoRegularTextView
             android:id="@+id/flagsFragment_countryCode"
             android:textColor="@android:color/black"
             android:textSize="16sp"
@@ -38,7 +38,7 @@
             />
     </LinearLayout>
 
-    <com.urbancups.countryflags.LatoLightBoldEditText
+    <com.urbancups.countryflags.LatoRegularEditText
         android:id="@+id/phone"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
